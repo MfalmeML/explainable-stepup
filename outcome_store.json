@@ -18,7 +18,10 @@
         "weight": 0.11
       }
     ],
-    "override_driven": true
+    "override_driven": true,
+    "reason_agreement": 1,
+    "investigator_id": "cli_investigator",
+    "investigator_review_timestamp": "2026-09-01T09:12:13.196101"
   },
   "tx_10001": {
     "transaction_id": "tx_10001",
