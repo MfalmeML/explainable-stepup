@@ -11,15 +11,19 @@ class ReasonRanker:
         if not all_reasons:
             return []
         
-        # Deduplicate by feature/signal name to avoid redundancy
-        seen = set()
-        deduplicated = []
+        # Deduplicate by feature/signal name to avoid redundancy. When the
+        # same key appears from both sources (e.g. a tabular feature and a
+        # graph signal sharing a name), keep whichever has the higher
+        # severity_weight rather than whichever appeared first in the list.
+        best_by_key: Dict[str, Dict] = {}
         for reason in all_reasons:
             # Use feature name for tabular, signal name for graph
             key = reason.get('feature', reason.get('signal', ''))
-            if key not in seen:
-                seen.add(key)
-                deduplicated.append(reason)
+            weight = reason.get('severity_weight', 0)
+            existing = best_by_key.get(key)
+            if existing is None or weight > existing.get('severity_weight', 0):
+                best_by_key[key] = reason
+        deduplicated = list(best_by_key.values())
         
         # Sort by severity_weight descending
         deduplicated.sort(key=lambda x: x.get('severity_weight', 0), reverse=True)
