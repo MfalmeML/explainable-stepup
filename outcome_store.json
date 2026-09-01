@@ -1,0 +1,403 @@
+{
+  "tx_10000": {
+    "transaction_id": "tx_10000",
+    "decision": "DECLINE",
+    "combined_risk_score": 0.95,
+    "ring_score": 0.07,
+    "reason_template_version": "2026-08-30-v1",
+    "timestamp": "2026-08-29T18:11:20.659854",
+    "reasons": [
+      {
+        "text": "Part of connected fraud network with 12 accounts",
+        "source": "graph",
+        "weight": 0.87
+      },
+      {
+        "text": "Velocity exceeds threshold",
+        "source": "tabular",
+        "weight": 0.11
+      }
+    ],
+    "override_driven": true
+  },
+  "tx_10001": {
+    "transaction_id": "tx_10001",
+    "decision": "APPROVE",
+    "combined_risk_score": 0.3,
+    "ring_score": 0.44,
+    "reason_template_version": "2026-08-30-v1",
+    "timestamp": "2026-08-31T12:11:20.659854"
+  },
+  "tx_10002": {
+    "transaction_id": "tx_10002",
+    "decision": "APPROVE",
+    "combined_risk_score": 0.74,
+    "ring_score": 0.01,
+    "reason_template_version": "2026-08-30-v1",
+    "timestamp": "2026-08-30T00:11:20.659854"
+  },
+  "tx_10003": {
+    "transaction_id": "tx_10003",
+    "decision": "APPROVE",
+    "combined_risk_score": 0.63,
+    "ring_score": 0.5,
+    "reason_template_version": "2026-08-30-v1",
+    "timestamp": "2026-08-30T21:11:20.659854"
+  },
+  "tx_10004": {
+    "transaction_id": "tx_10004",
+    "decision": "DECLINE",
+    "combined_risk_score": 0.28,
+    "ring_score": 0.45,
+    "reason_template_version": "2026-08-30-v1",
+    "timestamp": "2026-09-01T03:11:20.659854",
+    "reasons": [
+      {
+        "text": "Part of connected fraud network with 12 accounts",
+        "source": "tabular",
+        "weight": 0.38
+      }
+    ],
+    "override_driven": false,
+    "reason_agreement": 1,
+    "investigator_id": "inv_5"
+  },
+  "tx_10005": {
+    "transaction_id": "tx_10005",
+    "decision": "DECLINE",
+    "combined_risk_score": 0.76,
+    "ring_score": 0.74,
+    "reason_template_version": "2026-08-30-v1",
+    "timestamp": "2026-09-01T04:11:20.659854",
+    "reasons": [
+      {
+        "text": "IP address mismatch",
+        "source": "tabular",
+        "weight": 0.26
+      },
+      {
+        "text": "Transaction amount 8.2x normal",
+        "source": "graph",
+        "weight": 0.81
+      },
+      {
+        "text": "Account is 1 hops from confirmed fraud device",
+        "source": "tabular",
+        "weight": 0.36
+      }
+    ],
+    "override_driven": true
+  },
+  "tx_10006": {
+    "transaction_id": "tx_10006",
+    "decision": "APPROVE",
+    "combined_risk_score": 0.42,
+    "ring_score": 0.42,
+    "reason_template_version": "2026-08-30-v1",
+    "timestamp": "2026-08-31T01:11:20.659854"
+  },
+  "tx_10007": {
+    "transaction_id": "tx_10007",
+    "decision": "APPROVE",
+    "combined_risk_score": 0.18,
+    "ring_score": 0.11,
+    "reason_template_version": "2026-08-30-v1",
+    "timestamp": "2026-08-30T11:11:20.659854"
+  },
+  "tx_10008": {
+    "transaction_id": "tx_10008",
+    "decision": "CHALLENGE",
+    "combined_risk_score": 0.39,
+    "ring_score": 0.86,
+    "reason_template_version": "2026-08-30-v1",
+    "timestamp": "2026-08-29T21:11:20.659854",
+    "reasons": [
+      {
+        "text": "Velocity exceeds threshold",
+        "source": "tabular",
+        "weight": 0.65
+      },
+      {
+        "text": "IP address mismatch",
+        "source": "graph",
+        "weight": 0.31
+      }
+    ],
+    "override_driven": false
+  },
+  "tx_10009": {
+    "transaction_id": "tx_10009",
+    "decision": "DECLINE",
+    "combined_risk_score": 0.48,
+    "ring_score": 0.27,
+    "reason_template_version": "2026-08-30-v1",
+    "timestamp": "2026-08-31T11:11:20.659854",
+    "reasons": [
+      {
+        "text": "Account is 1 hops from confirmed fraud device",
+        "source": "graph",
+        "weight": 0.4
+      },
+      {
+        "text": "Account is 1 hops from confirmed fraud device",
+        "source": "tabular",
+        "weight": 0.55
+      }
+    ],
+    "override_driven": false,
+    "reason_agreement": 1,
+    "investigator_id": "inv_5"
+  },
+  "tx_10010": {
+    "transaction_id": "tx_10010",
+    "decision": "DECLINE",
+    "combined_risk_score": 0.1,
+    "ring_score": 0.22,
+    "reason_template_version": "2026-08-30-v1",
+    "timestamp": "2026-08-31T20:11:20.659854",
+    "reasons": [
+      {
+        "text": "Transaction amount 8.2x normal",
+        "source": "tabular",
+        "weight": 0.58
+      },
+      {
+        "text": "IP address mismatch",
+        "source": "graph",
+        "weight": 0.18
+      }
+    ],
+    "override_driven": false,
+    "reason_agreement": 0,
+    "investigator_id": "inv_5"
+  },
+  "tx_10011": {
+    "transaction_id": "tx_10011",
+    "decision": "CHALLENGE",
+    "combined_risk_score": 0.38,
+    "ring_score": 0.85,
+    "reason_template_version": "2026-08-30-v1",
+    "timestamp": "2026-09-01T06:11:20.659854",
+    "reasons": [
+      {
+        "text": "Transaction amount 8.2x normal",
+        "source": "tabular",
+        "weight": 0.79
+      }
+    ],
+    "override_driven": false
+  },
+  "tx_10012": {
+    "transaction_id": "tx_10012",
+    "decision": "APPROVE",
+    "combined_risk_score": 0.23,
+    "ring_score": 0.55,
+    "reason_template_version": "2026-08-30-v1",
+    "timestamp": "2026-08-30T02:11:20.659854"
+  },
+  "tx_10013": {
+    "transaction_id": "tx_10013",
+    "decision": "APPROVE",
+    "combined_risk_score": 0.25,
+    "ring_score": 0.56,
+    "reason_template_version": "2026-08-30-v1",
+    "timestamp": "2026-08-31T08:11:20.659854"
+  },
+  "tx_10014": {
+    "transaction_id": "tx_10014",
+    "decision": "CHALLENGE",
+    "combined_risk_score": 0.66,
+    "ring_score": 0.25,
+    "reason_template_version": "2026-08-30-v1",
+    "timestamp": "2026-08-30T22:11:20.659854",
+    "reasons": [
+      {
+        "text": "Transaction amount 8.2x normal",
+        "source": "graph",
+        "weight": 0.29
+      },
+      {
+        "text": "Account is 1 hops from confirmed fraud device",
+        "source": "tabular",
+        "weight": 0.24
+      }
+    ],
+    "override_driven": false
+  },
+  "tx_10015": {
+    "transaction_id": "tx_10015",
+    "decision": "APPROVE",
+    "combined_risk_score": 0.3,
+    "ring_score": 0.59,
+    "reason_template_version": "2026-08-30-v1",
+    "timestamp": "2026-08-31T02:11:20.659854"
+  },
+  "tx_10016": {
+    "transaction_id": "tx_10016",
+    "decision": "DECLINE",
+    "combined_risk_score": 0.44,
+    "ring_score": 0.83,
+    "reason_template_version": "2026-08-30-v1",
+    "timestamp": "2026-08-30T15:11:20.659854",
+    "reasons": [
+      {
+        "text": "New device",
+        "source": "graph",
+        "weight": 0.76
+      },
+      {
+        "text": "Device linked to 4 other accounts",
+        "source": "graph",
+        "weight": 0.53
+      },
+      {
+        "text": "Device linked to 4 other accounts",
+        "source": "tabular",
+        "weight": 0.79
+      }
+    ],
+    "override_driven": false,
+    "reason_agreement": 0,
+    "investigator_id": "inv_3"
+  },
+  "tx_10017": {
+    "transaction_id": "tx_10017",
+    "decision": "CHALLENGE",
+    "combined_risk_score": 0.24,
+    "ring_score": 0.79,
+    "reason_template_version": "2026-08-30-v1",
+    "timestamp": "2026-08-30T04:11:20.659854",
+    "reasons": [
+      {
+        "text": "IP address mismatch",
+        "source": "tabular",
+        "weight": 0.22
+      },
+      {
+        "text": "Account is 1 hops from confirmed fraud device",
+        "source": "tabular",
+        "weight": 0.59
+      }
+    ],
+    "override_driven": false,
+    "reason_agreement": 0,
+    "investigator_id": "inv_2"
+  },
+  "tx_10018": {
+    "transaction_id": "tx_10018",
+    "decision": "APPROVE",
+    "combined_risk_score": 0.67,
+    "ring_score": 0.52,
+    "reason_template_version": "2026-08-30-v1",
+    "timestamp": "2026-08-29T17:11:20.659854"
+  },
+  "tx_10019": {
+    "transaction_id": "tx_10019",
+    "decision": "CHALLENGE",
+    "combined_risk_score": 0.88,
+    "ring_score": 0.03,
+    "reason_template_version": "2026-08-30-v1",
+    "timestamp": "2026-08-31T16:11:20.659854",
+    "reasons": [
+      {
+        "text": "New device",
+        "source": "tabular",
+        "weight": 0.14
+      },
+      {
+        "text": "Transaction amount 8.2x normal",
+        "source": "graph",
+        "weight": 0.35
+      }
+    ],
+    "override_driven": false,
+    "reason_agreement": 0,
+    "investigator_id": "inv_1"
+  },
+  "tx_10020": {
+    "transaction_id": "tx_10020",
+    "decision": "APPROVE",
+    "combined_risk_score": 0.66,
+    "ring_score": 0.24,
+    "reason_template_version": "2026-08-30-v1",
+    "timestamp": "2026-08-29T10:11:20.659854"
+  },
+  "tx_10021": {
+    "transaction_id": "tx_10021",
+    "decision": "CHALLENGE",
+    "combined_risk_score": 0.66,
+    "ring_score": 0.84,
+    "reason_template_version": "2026-08-30-v1",
+    "timestamp": "2026-08-29T20:11:20.659854",
+    "reasons": [
+      {
+        "text": "New device",
+        "source": "graph",
+        "weight": 0.72
+      },
+      {
+        "text": "Velocity exceeds threshold",
+        "source": "tabular",
+        "weight": 0.81
+      },
+      {
+        "text": "Account is 1 hops from confirmed fraud device",
+        "source": "tabular",
+        "weight": 0.26
+      }
+    ],
+    "override_driven": false,
+    "reason_agreement": 1,
+    "investigator_id": "inv_2"
+  },
+  "tx_10022": {
+    "transaction_id": "tx_10022",
+    "decision": "CHALLENGE",
+    "combined_risk_score": 0.72,
+    "ring_score": 0.86,
+    "reason_template_version": "2026-08-30-v1",
+    "timestamp": "2026-08-31T22:11:20.659854",
+    "reasons": [
+      {
+        "text": "Device linked to 4 other accounts",
+        "source": "tabular",
+        "weight": 0.41
+      }
+    ],
+    "override_driven": false
+  },
+  "tx_10023": {
+    "transaction_id": "tx_10023",
+    "decision": "APPROVE",
+    "combined_risk_score": 0.7,
+    "ring_score": 0.28,
+    "reason_template_version": "2026-08-30-v1",
+    "timestamp": "2026-08-31T07:11:20.659854"
+  },
+  "tx_10024": {
+    "transaction_id": "tx_10024",
+    "decision": "DECLINE",
+    "combined_risk_score": 0.81,
+    "ring_score": 0.75,
+    "reason_template_version": "2026-08-30-v1",
+    "timestamp": "2026-08-30T05:11:20.659854",
+    "reasons": [
+      {
+        "text": "Transaction amount 8.2x normal",
+        "source": "graph",
+        "weight": 0.33
+      },
+      {
+        "text": "Account is 1 hops from confirmed fraud device",
+        "source": "tabular",
+        "weight": 0.17
+      },
+      {
+        "text": "Account is 1 hops from confirmed fraud device",
+        "source": "graph",
+        "weight": 0.25
+      }
+    ],
+    "override_driven": false
+  }
+}
