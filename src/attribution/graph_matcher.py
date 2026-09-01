@@ -15,6 +15,7 @@ class GraphTemplateMatcher:
         with open(config_path, 'r') as f:
             self.config = yaml.safe_load(f)
         self.templates = self.config.get("templates", [])
+        self.version = self.config.get("version")
 
     def match_signals(self, graph_features: Dict[str, float]) -> List[Dict[str, Any]]:
         # Returns: [{"signal": "device_account_count", "value": 6, "phrase": "...", "weight": 0.7}, ...]
