@@ -3,11 +3,26 @@ from typing import Dict, List, Any
 
 # Signals where a LOWER value indicates higher risk (e.g. distance-based
 # signals: fewer hops to a known fraud node = more suspicious). Every other
-# signal is treated as "higher value = more suspicious" (value >= threshold).
-# NOTE: this direction isn't expressed in the YAML config, so any new
-# distance-like signal added in Sprint 2+ must be added here too, or it will
-# silently use the wrong comparison.
+# signal defaults to "higher value = more suspicious" (value >= threshold).
+# This is a legacy fallback for template configs that don't specify an
+# explicit "direction" field (see match_signals below) -- prefer adding
+# `direction: lower_is_worse` to the YAML template instead of relying on
+# signal name matching here, since name-based matching silently breaks
+# whenever a signal is renamed (e.g. "shortest_path" vs
+# "shortest_path_to_confirmed_fraud").
 LOWER_IS_WORSE = {"shortest_path"}
+
+
+class _AnyPlaceholder(dict):
+    """Lets phrase.format_map() accept any placeholder name (e.g. {count},
+    {distance}, {size}, ...) by resolving every one to the same matched
+    value, instead of requiring the caller to know every placeholder name
+    templates might use in advance."""
+    def __init__(self, value):
+        self._value = value
+
+    def __missing__(self, key):
+        return self._value
 
 
 class GraphTemplateMatcher:
@@ -28,7 +43,12 @@ class GraphTemplateMatcher:
             value = graph_features[signal]
             threshold = template["threshold"]
 
-            if signal in LOWER_IS_WORSE:
+            direction = template.get("direction")
+            if direction == "lower_is_worse":
+                triggered = value <= threshold
+            elif direction == "higher_is_worse":
+                triggered = value >= threshold
+            elif signal in LOWER_IS_WORSE:
                 triggered = value <= threshold
             else:
                 triggered = value >= threshold
@@ -37,7 +57,7 @@ class GraphTemplateMatcher:
                 continue
 
             severity_weight = template["severity_weight"]
-            phrase = template["phrase"].format(count=value, distance=value)
+            phrase = template["phrase"].format_map(_AnyPlaceholder(value))
 
             matches.append({
                 "signal": signal,
