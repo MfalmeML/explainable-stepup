@@ -5,7 +5,7 @@ import json
 from src.data.outcome_store import OutcomeStore
 from src.validation.metrics import ValidationMetrics
 from src.validation.step_up_schema import StepUpRecord
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 
 class TestValidationLoop(unittest.TestCase):
     def setUp(self):
@@ -21,7 +21,7 @@ class TestValidationLoop(unittest.TestCase):
             ("amount_anomaly", 0.3)
         ]
         
-        now = datetime.utcnow()
+        now = datetime.now(timezone.utc)
         
         for i, (category, ring_score) in enumerate(categories):
             for j in range(10):
@@ -47,7 +47,10 @@ class TestValidationLoop(unittest.TestCase):
                 )
                 
                 result = "completed" if is_completed else "abandoned"
-                timestamp = (now - timedelta(hours=j)).isoformat()
+                # Baseline records must land in detect_drift's "old" window
+                # (1-2 days ago), not overlap with the "new" window (last 1
+                # day), or old_total stays 0 and the category never surfaces.
+                timestamp = (now - timedelta(days=1, hours=12 + j)).isoformat()
                 record = StepUpRecord(
                     transaction_id=tx_id,
                     channel="otp_sms",
@@ -92,7 +95,7 @@ class TestValidationLoop(unittest.TestCase):
                 reason_template_version="test-v1"
             )
             result = "abandoned" if i < 3 else "completed"  # 40% completion rate
-            timestamp = datetime.utcnow().isoformat()
+            timestamp = datetime.now(timezone.utc).isoformat()
             record = StepUpRecord(
                 transaction_id=tx_id,
                 channel="otp_sms",
