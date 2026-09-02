@@ -3,6 +3,21 @@ from typing import Dict, List, Optional
 from datetime import datetime, timedelta, timezone
 import json
 
+
+def _parse_ts(ts_str: str) -> datetime:
+    """Parse an ISO timestamp string, treating naive timestamps as UTC.
+
+    step_up_timestamp values in the store may be naive (from older records,
+    or any StepUpRecord created without an explicit timestamp) or
+    timezone-aware (current default). Comparing a naive and an aware
+    datetime raises TypeError, so every timestamp read from the store is
+    normalized to aware-UTC here before it's used in any comparison.
+    """
+    dt = datetime.fromisoformat(ts_str)
+    if dt.tzinfo is None:
+        dt = dt.replace(tzinfo=timezone.utc)
+    return dt
+
 class ValidationMetrics:
     def __init__(self, store_path: str):
         self.store = OutcomeStore(store_path)
@@ -98,7 +113,7 @@ class ValidationMetrics:
         # Group by category and time interval
         categories = {}
         for tx_id, data in challenges.items():
-            timestamp = datetime.fromisoformat(data["step_up_timestamp"])
+            timestamp = _parse_ts(data["step_up_timestamp"])
             if timestamp < cutoff:
                 continue
             
@@ -171,7 +186,7 @@ class ValidationMetrics:
         
         categories = {}
         for tx_id, data in challenges.items():
-            timestamp = datetime.fromisoformat(data["step_up_timestamp"])
+            timestamp = _parse_ts(data["step_up_timestamp"])
             
             if timestamp < cutoff_old:
                 continue
