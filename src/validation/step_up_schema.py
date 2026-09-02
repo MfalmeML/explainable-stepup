@@ -1,5 +1,5 @@
 from typing import Literal, Optional
-from datetime import datetime
+from datetime import datetime, timezone
 
 StepUpResult = Literal["completed", "abandoned", "failed"]
 
@@ -16,7 +16,7 @@ class StepUpRecord:
         self.channel = channel
         self.result = result
         self.latency_ms = latency_ms
-        self.timestamp = timestamp or datetime.utcnow().isoformat()
+        self.timestamp = timestamp or datetime.now(timezone.utc).isoformat()
     
     def to_dict(self) -> dict:
         return {
