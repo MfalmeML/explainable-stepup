@@ -1,6 +1,6 @@
 from src.data.outcome_store import OutcomeStore
 from typing import Dict, List, Optional
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 import json
 
 class ValidationMetrics:
@@ -92,7 +92,7 @@ class ValidationMetrics:
             return {}
         
         # Determine time range
-        now = datetime.utcnow()
+        now = datetime.now(timezone.utc)
         cutoff = now - timedelta(days=days)
         
         # Group by category and time interval
@@ -165,7 +165,7 @@ class ValidationMetrics:
         if not challenges:
             return {}
         
-        now = datetime.utcnow()
+        now = datetime.now(timezone.utc)
         cutoff_old = now - timedelta(days=window_days * 2)
         cutoff_new = now - timedelta(days=window_days)
         
