@@ -1,0 +1,12 @@
+{
+    "model_path": "/etc/explainable/models/tabular_model.pkl",
+    "background_path": "/etc/explainable/models/background_data.pkl",
+    "template_config_path": "/etc/explainable/config/templates/graph_reason_templates.yaml",
+    "store_path": "/var/lib/explainable/outcome_store.json",
+    "log_level": "INFO",
+    "max_reasons": 3,
+    "min_cases_for_validation": 5,
+    "drift_threshold": 0.15,
+    "step_up_channel": "otp_sms",
+    "investigator_sample_size": 20
+}
