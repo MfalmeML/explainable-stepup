@@ -26,6 +26,7 @@ class TestExplanationService(unittest.TestCase):
         self.model_path = tempfile.mktemp(suffix='.pkl')
         self.background_path = tempfile.mktemp(suffix='.pkl')
         self.config_path = tempfile.mktemp(suffix='.yaml')
+        self.store_path = tempfile.mktemp(suffix='.json')
         
         with open(self.model_path, 'wb') as f:
             pickle.dump(self.model, f)
@@ -45,19 +46,24 @@ class TestExplanationService(unittest.TestCase):
             yaml.dump(config, f)
         
         self.service = ExplanationService(
-            self.model_path, self.background_path, self.config_path
+            self.model_path, self.background_path, self.config_path, self.store_path
         )
     
     def tearDown(self):
         os.remove(self.model_path)
         os.remove(self.background_path)
         os.remove(self.config_path)
+        if os.path.exists(self.store_path):
+            os.remove(self.store_path)
     
     def test_approve_returns_none(self):
-        result = self.service.explain_decision(
-            {'amount': 0.0, 'device_count': 0.0, 'age_days': 0.0},
-            {},
-            'APPROVE'
+        result = self.service.explain_and_store(
+            transaction_id='tx_approve',
+            transaction_features={'amount': 0.0, 'device_count': 0.0, 'age_days': 0.0},
+            graph_features={},
+            decision='APPROVE',
+            combined_risk_score=0.1,
+            ring_score=0.0
         )
         self.assertIsNone(result)
     
@@ -65,7 +71,14 @@ class TestExplanationService(unittest.TestCase):
         transaction = {'amount': 5.0, 'device_count': 6.0, 'age_days': 0.5}
         graph = {'device_account_count': 6, 'shortest_path': 1}
         
-        result = self.service.explain_decision(transaction, graph, 'CHALLENGE')
+        result = self.service.explain_and_store(
+            transaction_id='tx_challenge',
+            transaction_features=transaction,
+            graph_features=graph,
+            decision='CHALLENGE',
+            combined_risk_score=0.6,
+            ring_score=0.2
+        )
         
         self.assertIsNotNone(result)
         self.assertFalse(result['override_driven'])
@@ -73,10 +86,13 @@ class TestExplanationService(unittest.TestCase):
         self.assertGreater(len(result['reasons']), 0)
     
     def test_override_driven_returns_override_reason(self):
-        result = self.service.explain_decision(
-            {'amount': 5.0},
-            {},
-            'DECLINE',
+        result = self.service.explain_and_store(
+            transaction_id='tx_override',
+            transaction_features={'amount': 5.0},
+            graph_features={},
+            decision='DECLINE',
+            combined_risk_score=0.95,
+            ring_score=0.9,
             override_triggered=True
         )
         
@@ -89,7 +105,33 @@ class TestExplanationService(unittest.TestCase):
         transaction = {'amount': -5.0, 'device_count': -5.0, 'age_days': 0.5}
         graph = {'device_account_count': 0, 'shortest_path': 5}
         
-        result = self.service.explain_decision(transaction, graph, 'DECLINE')
+        result = self.service.explain_and_store(
+            transaction_id='tx_decline',
+            transaction_features=transaction,
+            graph_features=graph,
+            decision='DECLINE',
+            combined_risk_score=0.85,
+            ring_score=0.3
+        )
         
         self.assertIsNotNone(result)
         self.assertFalse(result['override_driven'])
+
+    def test_explain_and_store_persists_decision_record(self):
+        transaction = {'amount': 5.0, 'device_count': 6.0, 'age_days': 0.5}
+        graph = {'device_account_count': 6, 'shortest_path': 1}
+
+        self.service.explain_and_store(
+            transaction_id='tx_persist',
+            transaction_features=transaction,
+            graph_features=graph,
+            decision='CHALLENGE',
+            combined_risk_score=0.6,
+            ring_score=0.2
+        )
+
+        stored = self.service.store.get_decision('tx_persist')
+        self.assertIsNotNone(stored)
+        self.assertEqual(stored['decision'], 'CHALLENGE')
+        self.assertEqual(stored['combined_risk_score'], 0.6)
+        self.assertEqual(stored['ring_score'], 0.2)
