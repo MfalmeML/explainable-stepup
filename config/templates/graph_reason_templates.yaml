@@ -8,6 +8,7 @@ templates:
     threshold: 2
     phrase: "Account is {distance} hops from confirmed fraud device"
     severity_weight: 0.9
+    direction: lower_is_worse
   - signal: connected_component_size
     threshold: 10
     phrase: "Part of connected fraud network with {size} accounts"
