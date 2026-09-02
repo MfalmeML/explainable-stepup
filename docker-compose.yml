@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  api:
+    build: .
+    ports:
+      - "5000:5000"
+    environment:
+      - STORE_PATH=/var/lib/explainable/outcome_store.json
+      - MODEL_PATH=/etc/explainable/models/tabular_model.pkl
+      - BACKGROUND_PATH=/etc/explainable/models/background_data.pkl
+      - TEMPLATE_CONFIG_PATH=/etc/explainable/config/templates/graph_reason_templates.yaml
+      - LOG_LEVEL=INFO
+    volumes:
+      - ./data:/var/lib/explainable
+      - ./models:/etc/explainable/models
+      - ./config:/etc/explainable/config
+    restart: unless-stopped
+  
+  consumer:
+    build: .
+    command: python -m src.consumer.decision_consumer
+    environment:
+      - STORE_PATH=/var/lib/explainable/outcome_store.json
+      - MODEL_PATH=/etc/explainable/models/tabular_model.pkl
+      - BACKGROUND_PATH=/etc/explainable/models/background_data.pkl
+      - TEMPLATE_CONFIG_PATH=/etc/explainable/config/templates/graph_reason_templates.yaml
+    volumes:
+      - ./data:/var/lib/explainable
+      - ./models:/etc/explainable/models
+      - ./config:/etc/explainable/config
+      - /tmp:/tmp
+    depends_on:
+      - api
+    restart: unless-stopped
