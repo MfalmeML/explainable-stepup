@@ -1,4 +1,5 @@
 from src.validation.metrics import ValidationMetrics
+import argparse
 import sys
 
 def print_completion_table(rates: dict, title: str):
@@ -58,52 +59,69 @@ def print_trend(trend: dict, category: str):
 
 def main():
     store_path = "outcome_store.json"
-    metrics = ValidationMetrics(store_path)
-    
-    if len(sys.argv) < 2:
-        print("Usage:")
-        print("  python dashboard_cli.py rates              - Show completion rates by category")
-        print("  python dashboard_cli.py score              - Show completion rates by ring_score bucket")
-        print("  python dashboard_cli.py drift              - Check for drift")
-        print("  python dashboard_cli.py trend <category>   - Show trend for category")
-        print("  python dashboard_cli.py dashboard          - Show full dashboard")
+
+    parser = argparse.ArgumentParser(
+        description="Validation dashboard for step-up completion rates and drift."
+    )
+    subparsers = parser.add_subparsers(dest="command")
+
+    p_rates = subparsers.add_parser("rates", help="Show completion rates by category")
+    p_rates.add_argument("--min-cases", type=int, default=5, help="Minimum cases per category to display (default: 5)")
+
+    p_score = subparsers.add_parser("score", help="Show completion rates by ring_score bucket")
+    p_score.add_argument("--min-cases", type=int, default=5, help="Minimum cases per bucket to display (default: 5)")
+
+    p_drift = subparsers.add_parser("drift", help="Check for drift")
+    p_drift.add_argument("--min-cases", type=int, default=5, help="Minimum cases per period to display (default: 5)")
+
+    p_trend = subparsers.add_parser("trend", help="Show trend for category")
+    p_trend.add_argument("category", help="Reason category to show the trend for, e.g. new_device")
+    p_trend.add_argument("--min-cases", type=int, default=3, help="Minimum cases per interval to display (default: 3)")
+
+    p_dash = subparsers.add_parser("dashboard", help="Show full dashboard")
+    p_dash.add_argument("--min-cases", type=int, default=5, help="Minimum cases per category/bucket/period to display (default: 5)")
+
+    args = parser.parse_args()
+
+    if args.command is None:
+        parser.print_help()
         return
-    
-    command = sys.argv[1]
-    
-    if command == "rates":
-        rates = metrics.get_completion_rate_by_category()
+
+    metrics = ValidationMetrics(store_path)
+
+    if args.command == "rates":
+        rates = metrics.get_completion_rate_by_category(min_cases=args.min_cases)
         print_completion_table(rates, "Completion Rates by Reason Category")
-    
-    elif command == "score":
-        rates = metrics.get_completion_rate_by_score_bucket()
+
+    elif args.command == "score":
+        rates = metrics.get_completion_rate_by_score_bucket(min_cases=args.min_cases)
         print_completion_table(rates, "Completion Rates by Ring Score Bucket")
-    
-    elif command == "drift":
-        alerts = metrics.detect_drift()
+
+    elif args.command == "drift":
+        alerts = metrics.detect_drift(min_cases=args.min_cases)
         print_drift_alerts(alerts)
-    
-    elif command == "trend" and len(sys.argv) > 2:
-        trend = metrics.get_trend_by_category()
-        print_trend(trend, sys.argv[2])
-    
-    elif command == "dashboard":
-        rates_by_category = metrics.get_completion_rate_by_category()
-        rates_by_score = metrics.get_completion_rate_by_score_bucket()
-        alerts = metrics.detect_drift()
-        
+
+    elif args.command == "trend":
+        trend = metrics.get_trend_by_category(min_cases=args.min_cases)
+        print_trend(trend, args.category)
+
+    elif args.command == "dashboard":
+        rates_by_category = metrics.get_completion_rate_by_category(min_cases=args.min_cases)
+        rates_by_score = metrics.get_completion_rate_by_score_bucket(min_cases=args.min_cases)
+        alerts = metrics.detect_drift(min_cases=args.min_cases)
+
         print_completion_table(rates_by_category, "Completion Rates by Reason Category")
         print_completion_table(rates_by_score, "Completion Rates by Ring Score Bucket")
         print_drift_alerts(alerts)
-        
+
         # Show top trend
-        trend = metrics.get_trend_by_category()
+        trend = metrics.get_trend_by_category(min_cases=args.min_cases)
         if trend:
             top_category = max(trend.items(), key=lambda x: len(x[1]))[0]
             print_trend(trend, top_category)
-    
+
     else:
-        print(f"Unknown command: {command}")
+        print(f"Unknown command: {args.command}")
 
 if __name__ == "__main__":
     main()
