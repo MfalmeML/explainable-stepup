@@ -45,6 +45,7 @@ class GraphTemplateMatcher:
                 "phrase": phrase,
                 "weight": severity_weight,
                 "severity_weight": severity_weight,
+                "source": "graph",
             })
 
         matches.sort(key=lambda m: m["severity_weight"], reverse=True)
