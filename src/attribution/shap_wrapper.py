@@ -10,8 +10,19 @@ class ShapAttributor:
             self.model = pickle.load(f)
         with open(background_data_path, 'rb') as f:
             self.background = pickle.load(f)
+        background_feature_names = None
+        if isinstance(self.background, dict):
+            background_feature_names = self.background["feature_names"]
+            self.background = self.background["data"]
         self.explainer = shap.TreeExplainer(self.model, self.background)
-        self.feature_names = list(self.background.columns) if hasattr(self.background, 'columns') else [f"feature_{i}" for i in range(self.background.shape[1])]
+        if background_feature_names:
+            self.feature_names = list(background_feature_names)
+        elif hasattr(self.background, 'columns'):
+            self.feature_names = list(self.background.columns)
+        elif hasattr(self.model, 'feature_names_in_'):
+            self.feature_names = list(self.model.feature_names_in_)
+        else:
+            self.feature_names = [f"feature_{i}" for i in range(self.background.shape[1])]
     
     def get_attributions(self, features: Dict[str, float]) -> List[Dict[str, Any]]:
         # Convert dict to DataFrame with correct column order, defaulting any

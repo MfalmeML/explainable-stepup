@@ -46,7 +46,10 @@ def generate_models(output_dir: str = "models"):
     model.fit(X, y)
     
     # Background data for SHAP (sample 100 rows)
-    background = X.sample(100, random_state=42)
+    background = {
+        "data": X.sample(100, random_state=42).to_numpy(dtype=np.float64),
+        "feature_names": list(X.columns)
+    }
     
     # Save
     model_path = os.path.join(output_dir, "tabular_model.pkl")
