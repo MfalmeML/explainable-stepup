@@ -1,0 +1,53 @@
+version: '3.8'
+
+services:
+  api:
+    image: explainable-api:latest
+    ports:
+      - "5000:5000"
+    environment:
+      - STORE_PATH=/var/lib/explainable/outcome_store.json
+      - MODEL_PATH=/etc/explainable/models/tabular_model.pkl
+      - BACKGROUND_PATH=/etc/explainable/models/background_data.pkl
+      - TEMPLATE_CONFIG_PATH=/etc/explainable/config/templates/graph_reason_templates.yaml
+      - LOG_LEVEL=INFO
+    volumes:
+      - /var/lib/explainable:/var/lib/explainable
+      - /etc/explainable:/etc/explainable
+      - /var/log/explainable:/var/log/explainable
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+  
+  consumer:
+    image: explainable-consumer:latest
+    environment:
+      - STORE_PATH=/var/lib/explainable/outcome_store.json
+      - MODEL_PATH=/etc/explainable/models/tabular_model.pkl
+      - BACKGROUND_PATH=/etc/explainable/models/background_data.pkl
+      - TEMPLATE_CONFIG_PATH=/etc/explainable/config/templates/graph_reason_templates.yaml
+      - LOG_LEVEL=INFO
+    volumes:
+      - /var/lib/explainable:/var/lib/explainable
+      - /etc/explainable:/etc/explainable
+      - /var/log/explainable:/var/log/explainable
+      - /tmp:/tmp
+    depends_on:
+      - api
+    restart: unless-stopped
+  
+  monitor:
+    image: explainable-api:latest
+    command: python -c "from src.validation.faithfulness import FaithfulnessTester; import time; tester = FaithfulnessTester('/var/lib/explainable/outcome_store.json', '/etc/explainable/models/tabular_model.pkl', '/etc/explainable/models/background_data.pkl'); tester.schedule_faithfulness_check(24)"
+    environment:
+      - STORE_PATH=/var/lib/explainable/outcome_store.json
+      - MODEL_PATH=/etc/explainable/models/tabular_model.pkl
+      - BACKGROUND_PATH=/etc/explainable/models/background_data.pkl
+      - LOG_LEVEL=INFO
+    volumes:
+      - /var/lib/explainable:/var/lib/explainable
+      - /etc/explainable:/etc/explainable
+    restart: unless-stopped
