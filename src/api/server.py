@@ -35,6 +35,37 @@ def get_explanation(transaction_id):
         return jsonify(result), 404
     return jsonify(result), 200
 
+@app.route('/explanation/<transaction_id>/customer', methods=['GET'])
+def get_customer_explanation(transaction_id):
+    """Get customer-safe explanation."""
+    from src.ui.customer_messages import CustomerMessageFilter
+
+    result = api_handlers.handle_get_case(transaction_id)
+    if "error" in result:
+        return jsonify(result), 404
+
+    reasons = result.get('reasons', [])
+    filtered = CustomerMessageFilter.filter_for_customer(reasons)
+    message = CustomerMessageFilter.get_customer_message(reasons)
+
+    return jsonify({
+        "transaction_id": transaction_id,
+        "message": message,
+        "reasons": filtered,
+        "customer_safe": True
+    }), 200
+
+@app.route('/compliance/export/<transaction_id>', methods=['GET'])
+def get_compliance_export(transaction_id):
+    """Get compliance-ready export."""
+    from scripts.compliance_export import ComplianceExport
+
+    exporter = ComplianceExport(STORE_PATH)
+    result = exporter.export_adverse_action(transaction_id)
+    if "error" in result:
+        return jsonify(result), 404
+    return jsonify(result), 200
+
 @app.route('/reason-agreement', methods=['POST'])
 def record_agreement():
     payload = request.get_json()
