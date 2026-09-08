@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="600" viewBox="0 0 1200 600" role="img" aria-labelledby="title desc">
+  <title id="title">Validation Loop</title>
+  <desc id="desc">Validation loop diagram using step-up outcomes to measure precision and trigger monitoring alerts.</desc>
+  <defs>
+    <style>
+      .bg { fill: #f8fafc; }
+      .panel { fill: #ffffff; stroke: #cbd5e1; stroke-width: 2; }
+      .box { fill: #dbeafe; stroke: #60a5fa; stroke-width: 2; }
+      .box2 { fill: #ecfeff; stroke: #22d3ee; stroke-width: 2; }
+      .box3 { fill: #dcfce7; stroke: #4ade80; stroke-width: 2; }
+      .text { font: 600 18px 'Segoe UI', sans-serif; fill: #0f172a; }
+      .small { font: 500 14px 'Segoe UI', sans-serif; fill: #334155; }
+      .arrow { stroke: #475569; stroke-width: 2.5; fill: none; marker-end: url(#arrowhead); }
+    </style>
+    <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L9,3 z" fill="#475569" />
+    </marker>
+  </defs>
+  <rect class="bg" width="1200" height="600"/>
+
+  <rect class="panel" x="120" y="70" width="960" height="80" rx="14"/>
+  <text x="600" y="118" text-anchor="middle" class="text">Challenge + Step-Up Outcome Signal</text>
+
+  <rect class="box" x="120" y="200" width="220" height="120" rx="12"/>
+  <text x="230" y="250" text-anchor="middle" class="text">Reason</text>
+  <text x="230" y="275" text-anchor="middle" class="small">new_device</text>
+  <text x="230" y="295" text-anchor="middle" class="small">fraud_ring</text>
+
+  <rect class="box2" x="420" y="200" width="220" height="120" rx="12"/>
+  <text x="530" y="250" text-anchor="middle" class="text">Completion</text>
+  <text x="530" y="275" text-anchor="middle" class="small">completed / abandoned / failed</text>
+  <text x="530" y="295" text-anchor="middle" class="small">Latency tracked</text>
+
+  <rect class="box3" x="720" y="200" width="220" height="120" rx="12"/>
+  <text x="830" y="250" text-anchor="middle" class="text">Precision</text>
+  <text x="830" y="275" text-anchor="middle" class="small">Rate by bucket</text>
+  <text x="830" y="295" text-anchor="middle" class="small">Trend over time</text>
+
+  <rect class="panel" x="100" y="380" width="1000" height="120" rx="12"/>
+  <text x="600" y="420" text-anchor="middle" class="text">Alert Rules</text>
+  <text x="600" y="448" text-anchor="middle" class="small">Completion shift &gt; 15% over 7 days, high-risk false-positive warnings, low-risk expected behavior</text>
+  <text x="600" y="470" text-anchor="middle" class="small">Feedback to graph model precision monitor and business alerting</text>
+
+  <line class="arrow" x1="340" y1="260" x2="420" y2="260"/>
+  <line class="arrow" x1="640" y1="260" x2="720" y2="260"/>
+  <line class="arrow" x1="600" y1="320" x2="600" y2="380"/>
+</svg>
