@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="620" viewBox="0 0 1200 620" role="img" aria-labelledby="title desc">
+  <title id="title">Decision and Explanation Data Flow</title>
+  <desc id="desc">Data flow from decision engine to explanation generation to step-up and validation metrics.</desc>
+  <defs>
+    <style>
+      .bg { fill: #f8fafc; }
+      .node { fill: #ffffff; stroke: #94a3b8; stroke-width: 2; }
+      .accent { fill: #dbeafe; stroke: #60a5fa; stroke-width: 2; }
+      .accent2 { fill: #ecfeff; stroke: #22d3ee; stroke-width: 2; }
+      .accent3 { fill: #dcfce7; stroke: #4ade80; stroke-width: 2; }
+      .text { font: 600 17px 'Segoe UI', sans-serif; fill: #0f172a; }
+      .small { font: 500 14px 'Segoe UI', sans-serif; fill: #334155; }
+      .arrow { stroke: #475569; stroke-width: 2.5; fill: none; marker-end: url(#arrowhead); }
+    </style>
+    <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L9,3 z" fill="#475569" />
+    </marker>
+  </defs>
+  <rect class="bg" width="1200" height="620"/>
+
+  <rect class="node" x="60" y="60" width="210" height="90" rx="12"/>
+  <text x="165" y="100" text-anchor="middle" class="text">Decision Engine</text>
+  <text x="165" y="125" text-anchor="middle" class="small">APPROVE / CHALLENGE / DECLINE</text>
+
+  <rect class="accent" x="340" y="60" width="210" height="90" rx="12"/>
+  <text x="445" y="100" text-anchor="middle" class="text">Point-in-Time</text>
+  <text x="445" y="125" text-anchor="middle" class="small">Capture + hash</text>
+
+  <rect class="accent2" x="620" y="60" width="210" height="90" rx="12"/>
+  <text x="725" y="100" text-anchor="middle" class="text">SHAP + Graph</text>
+  <text x="725" y="125" text-anchor="middle" class="small">Reason generation</text>
+
+  <rect class="accent3" x="900" y="60" width="210" height="90" rx="12"/>
+  <text x="1005" y="100" text-anchor="middle" class="text">Rank + Select</text>
+  <text x="1005" y="125" text-anchor="middle" class="small">Top 3 reasons</text>
+
+  <line class="arrow" x1="270" y1="105" x2="340" y2="105"/>
+  <line class="arrow" x1="550" y1="105" x2="620" y2="105"/>
+  <line class="arrow" x1="830" y1="105" x2="900" y2="105"/>
+
+  <rect class="node" x="170" y="220" width="250" height="100" rx="12"/>
+  <text x="295" y="260" text-anchor="middle" class="text">Step-Up Challenge</text>
+  <text x="295" y="285" text-anchor="middle" class="small">OTP / verification event</text>
+
+  <rect class="node" x="500" y="220" width="250" height="100" rx="12"/>
+  <text x="625" y="260" text-anchor="middle" class="text">Outcome Capture</text>
+  <text x="625" y="285" text-anchor="middle" class="small">completed / abandoned / failed</text>
+
+  <rect class="node" x="830" y="220" width="250" height="100" rx="12"/>
+  <text x="955" y="260" text-anchor="middle" class="text">Validation Loop</text>
+  <text x="955" y="285" text-anchor="middle" class="small">Completion rate by category</text>
+
+  <line class="arrow" x1="1005" y1="150" x2="1005" y2="220"/>
+  <line class="arrow" x1="420" y1="150" x2="420" y2="220"/>
+  <line class="arrow" x1="295" y1="320" x2="295" y2="370"/>
+  <line class="arrow" x1="625" y1="320" x2="625" y2="370"/>
+  <line class="arrow" x1="955" y1="320" x2="955" y2="370"/>
+
+  <rect class="accent2" x="200" y="370" width="260" height="120" rx="12"/>
+  <text x="330" y="410" text-anchor="middle" class="text">Compliance Export</text>
+  <text x="330" y="435" text-anchor="middle" class="small">Justified adverse action</text>
+
+  <rect class="accent3" x="500" y="370" width="260" height="120" rx="12"/>
+  <text x="630" y="410" text-anchor="middle" class="text">Customer-safe</text>
+  <text x="630" y="435" text-anchor="middle" class="small">Filtered explanation message</text>
+
+  <rect class="accent" x="800" y="370" width="260" height="120" rx="12"/>
+  <text x="930" y="410" text-anchor="middle" class="text">Monitoring</text>
+  <text x="930" y="435" text-anchor="middle" class="small">Drift, coverage, faithfulness</text>
+</svg>
