@@ -68,15 +68,6 @@ class ProductionSystem:
         """Process with fallback handling for reliability."""
         degraded_sources = []
 
-        self.point_in_time.capture_decision_state(
-            transaction_id=transaction_id,
-            transaction_features=transaction_features,
-            graph_features=graph_features,
-            decision=decision,
-            combined_risk_score=combined_risk_score,
-            ring_score=ring_score
-        )
-        
         try:
             # Attempt normal processing
             result = self.service.explain_and_store(
@@ -87,6 +78,14 @@ class ProductionSystem:
                 combined_risk_score=combined_risk_score,
                 ring_score=ring_score,
                 override_triggered=override_triggered
+            )
+            self.point_in_time.capture_decision_state(
+                transaction_id=transaction_id,
+                transaction_features=transaction_features,
+                graph_features=graph_features,
+                decision=decision,
+                combined_risk_score=combined_risk_score,
+                ring_score=ring_score
             )
             return result
         except Exception as e:
@@ -150,6 +149,15 @@ class ProductionSystem:
                 )
             except Exception as e3:
                 logger.error(f"Failed to store degraded explanation: {e3}")
+
+            self.point_in_time.capture_decision_state(
+                transaction_id=transaction_id,
+                transaction_features=transaction_features,
+                graph_features=graph_features,
+                decision=decision,
+                combined_risk_score=combined_risk_score,
+                ring_score=ring_score
+            )
             
             return result
 
