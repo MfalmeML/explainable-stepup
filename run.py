@@ -5,6 +5,14 @@ from datetime import datetime
 from typing import Dict, Optional
 
 from src.service import ExplanationService
+from src.api.handlers import APIHandlers
+from src.api.step_up_handler import StepUpHandler
+from src.api.validation_handler import ValidationHandler
+from src.ui.investigator_view import InvestigatorView
+from src.data.point_in_time import PointInTimeRecorder
+from src.metrics.business_metrics import BusinessMetrics
+from src.validation.graph_monitor import GraphPrecisionMonitor
+from src.consumer.decision_consumer import DecisionConsumer
 from src.reliability.fallback import FallbackHandler
 from src.mlops.monitoring import MLOpsMonitor
 from src.validation.metrics import ValidationMetrics
@@ -26,9 +34,26 @@ class ProductionSystem:
             template_config_path=self.config["template_config_path"],
             store_path=self.config["store_path"]
         )
+        store_path = self.config["store_path"]
+        self.api_handlers = APIHandlers(store_path)
+        self.step_up_handler = StepUpHandler(store_path)
+        self.validation_handler = ValidationHandler(store_path)
+        self.investigator_view = InvestigatorView(store_path)
+        self.point_in_time = PointInTimeRecorder(store_path)
+        self.business_metrics = BusinessMetrics(store_path)
+        self.graph_monitor = GraphPrecisionMonitor(
+            store_path,
+            alert_threshold=self.config.get("drift_threshold", 0.15)
+        )
+        self.consumer = DecisionConsumer(
+            store_path=store_path,
+            model_path=self.config["model_path"],
+            background_path=self.config["background_path"],
+            template_config_path=self.config["template_config_path"]
+        )
         self.fallback = FallbackHandler(max_reasons=self.config.get("max_reasons", 3))
-        self.monitor = MLOpsMonitor(self.config["store_path"])
-        self.metrics = ValidationMetrics(self.config["store_path"])
+        self.monitor = MLOpsMonitor(store_path)
+        self.metrics = ValidationMetrics(store_path)
     
     def process_with_fallback(
         self,
@@ -42,6 +67,15 @@ class ProductionSystem:
     ) -> Dict:
         """Process with fallback handling for reliability."""
         degraded_sources = []
+
+        self.point_in_time.capture_decision_state(
+            transaction_id=transaction_id,
+            transaction_features=transaction_features,
+            graph_features=graph_features,
+            decision=decision,
+            combined_risk_score=combined_risk_score,
+            ring_score=ring_score
+        )
         
         try:
             # Attempt normal processing
@@ -162,6 +196,16 @@ def main():
     elif command == "drift":
         alerts = system.metrics.detect_drift()
         print(json.dumps(alerts, indent=2))
+
+    elif command == "business-dashboard":
+        dashboard = system.business_metrics.get_business_impact_dashboard()
+        print(json.dumps(dashboard, indent=2))
+
+    elif command == "graph-precision":
+        signal = system.graph_monitor.get_ring_score_precision_signal(
+            min_cases=system.config.get("min_cases_for_validation", 5)
+        )
+        print(json.dumps(signal, indent=2))
     
     else:
         print(f"Unknown command: {command}")
